@@ -12,6 +12,10 @@
  * Set error reporting to the level to which Zend Framework code must comply.
  */
 error_reporting( E_ALL | E_STRICT );
+/*
+ * Set a default timezone. PHP 5.4 throw a warning if there's no timezone set.
+ */
+date_default_timezone_set('UTC');
 
 
 if (class_exists('PHPUnit_Runner_Version', true)) {
