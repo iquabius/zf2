@@ -39,6 +39,12 @@ class FormElementManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($this->manager, $form->getFormFactory()->getFormElementManager());
     }
 
+    public function testInjectToFormElementManagerAware()
+    {
+        $form = $this->manager->get('Form');
+        $this->assertSame($this->manager, $form->getFormElementManager());
+    }
+
     /**
      * @group 3735
      */

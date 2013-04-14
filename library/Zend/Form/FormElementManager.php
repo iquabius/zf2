@@ -74,7 +74,20 @@ class FormElementManager extends AbstractPluginManager
     {
         parent::__construct($configuration);
 
+        $this->addInitializer(array($this, 'injectElementManager'));
         $this->addInitializer(array($this, 'injectFactory'));
+    }
+
+    /**
+     * Inject the element manager to any element that implements FormElementManagerAwareInterface
+     *
+     * @param $element
+     */
+    public function injectElementManager($element)
+    {
+        if ($element instanceof FormElementManagerAwareInterface) {
+            $element->setFormElementManager($this);
+        }
     }
 
     /**

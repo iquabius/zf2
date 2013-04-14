@@ -15,6 +15,7 @@ use Zend\Stdlib\InitializableInterface;
 
 class Element implements
     ElementAttributeRemovalInterface,
+    FormElementManagerAwareInterface,
     ElementInterface,
     InitializableInterface
 {
@@ -22,6 +23,11 @@ class Element implements
      * @var array
      */
     protected $attributes = array();
+
+    /**
+     * @var FormElementManager
+     */
+    protected $formElementManager = null;
 
     /**
      * @var string
@@ -368,5 +374,28 @@ class Element implements
     public function getMessages()
     {
         return $this->messages;
+    }
+
+    /**
+     * Inject a form element manager into the object
+     *
+     * @param  FormElementManager $formElementManager
+     * @return ElementInterface
+     */
+    public function setFormElementManager(FormElementManager $formElementManager)
+    {
+        $this->formElementManager = $formElementManager;
+
+        return $this;
+    }
+
+    /**
+     * Retrieve the form element manager from the object
+     *
+     * @return FormElementManager
+     */
+    public function getFormElementManager()
+    {
+        return $this->formElementManager;
     }
 }
