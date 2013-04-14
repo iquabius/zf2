@@ -16,7 +16,7 @@ use Zend\InputFilter\InputFilterInterface;
 use Zend\Stdlib\ArrayUtils;
 use Zend\Stdlib\Hydrator;
 
-class Factory
+class Factory implements FormElementManagerAwareInterface
 {
     /**
      * @var InputFilterFactory
