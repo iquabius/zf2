@@ -9,6 +9,9 @@
 
 namespace Zend\Form;
 
+use Zend\EventManager\EventManager;
+use Zend\EventManager\EventManagerAwareInterface;
+use Zend\EventManager\EventManagerInterface;
 use Zend\ServiceManager\AbstractPluginManager;
 use Zend\ServiceManager\ConfigInterface;
 use Zend\Stdlib\InitializableInterface;
@@ -18,7 +21,7 @@ use Zend\Stdlib\InitializableInterface;
  *
  * Enforces that elements retrieved are instances of ElementInterface.
  */
-class FormElementManager extends AbstractPluginManager
+class FormElementManager extends AbstractPluginManager implements EventManagerAwareInterface
 {
     /**
      * Default set of helpers
@@ -68,6 +71,16 @@ class FormElementManager extends AbstractPluginManager
     protected $shareByDefault = false;
 
     /**
+     * @var FormEvent
+     */
+    protected $event;
+
+    /**
+     * @var EventManagerInterface
+     */
+    protected $eventManager;
+
+    /**
      * @param ConfigInterface $configuration
      */
     public function __construct(ConfigInterface $configuration = null)
@@ -113,5 +126,43 @@ class FormElementManager extends AbstractPluginManager
             'Plugin of type %s is invalid; must implement Zend\Form\ElementInterface',
             (is_object($plugin) ? get_class($plugin) : gettype($plugin))
         ));
+    }
+
+    /**
+     * Get the Form event instance
+     *
+     * @return FormEvent
+     */
+    public function getEvent()
+    {
+        return $this->event;
+    }
+
+    /**
+     * Set the event manager instance
+     *
+     * @param  EventManagerInterface $eventManager
+     * @return Form
+     */
+    public function setEventManager(EventManagerInterface $eventManager)
+    {
+        $eventManager->setIdentifiers(array(
+            __CLASS__,
+            get_class($this),
+        ));
+        $this->eventManager = $eventManager;
+        return $this;
+    }
+
+    /**
+     * Retrieve the event manager
+     *
+     * Lazy-loads an EventManager instance if none registered.
+     *
+     * @return EventManagerInterface
+     */
+    public function getEventManager()
+    {
+        return $this->eventManager;
     }
 }

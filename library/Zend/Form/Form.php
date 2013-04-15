@@ -170,6 +170,9 @@ class Form extends Fieldset implements FormInterface
             return $this;
         }
 
+        // $event = $this->getFormElementManager()->getEvent()->setForm($this);
+        // $this->getFormElementManager()->getEventManager()->trigger(FormEvent::EVENT_PREPARE, $event);
+
         $this->getInputFilter();
 
         // If the user wants to, elements names can be wrapped by the form's name
@@ -412,6 +415,8 @@ class Form extends Fieldset implements FormInterface
         if ($this->hasValidated) {
             return $this->isValid;
         }
+
+        // $this->getFormElementManager()->getEventManager()->trigger('validate', $this);
 
         $this->isValid = false;
 

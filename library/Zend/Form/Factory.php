@@ -198,6 +198,7 @@ class Factory
         $name       = isset($spec['name'])       ? $spec['name']       : null;
         $options    = isset($spec['options'])    ? $spec['options']    : null;
         $attributes = isset($spec['attributes']) ? $spec['attributes'] : null;
+        $events     = isset($spec['events'])     ? $spec['events']     : null;
 
         if ($name !== null && $name !== '') {
             $element->setName($name);
@@ -209,6 +210,31 @@ class Factory
 
         if (is_array($attributes) || $attributes instanceof Traversable || $attributes instanceof ArrayAccess) {
             $element->setAttributes($attributes);
+        }
+
+        if (is_array($events) || $options instanceof Traversable) {
+            $eventManager = $this->getFormElementManager()->getEventManager();
+            foreach ($events as $eventSpec) {
+                if (!isset($eventSpec['event'])) {
+                    throw new Exception\DomainException(sprintf(
+                        'Missing "event" key in the event specification for element "%s"',
+                        $element->getName()
+                    ));
+                }
+
+                if (!isset($eventSpec['callback'])) {
+                    throw new Exception\DomainException(sprintf(
+                        'Missing "callback" key in the event specification for element "%s"',
+                        $element->getName()
+                    ));
+                }
+
+                $event    = $eventSpec['event'];
+                $callback = $eventSpec['callback'];
+                $priority = isset($eventSpec['priority']) ? $eventSpec['priority'] : 1;
+
+                $eventManager->attach($event, $callback, $priority);
+            }
         }
 
         return $element;
